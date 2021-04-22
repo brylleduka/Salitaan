@@ -5,6 +5,7 @@
       indeterminate
       color="teal"
     ></v-progress-linear>
+    <create-channel></create-channel>
     <v-list
       color="transparent"
       nav
@@ -13,11 +14,9 @@
       max-width="100%"
       class="ma-0 pa-0"
     >
-      <v-list-item-group
-        light
-      >
-        <v-list-item  v-for="(channel, index) in channels" :key="channel._id">
-           <!-- <router-link
+      <v-list-item-group light>
+        <v-list-item v-for="(channel, index) in channels" :key="channel._id">
+          <!-- <router-link
               :to="{ query: { ch: channel._id } }"
             > -->
           <v-list-item-content @click="getChannel(channel, index)">
@@ -26,19 +25,25 @@
               class="item__title white--text"
             ></v-list-item-title>
           </v-list-item-content>
-             <!-- </router-link> -->
+          <v-list-item-action>
+            <v-btn icon @click="deleteChannel(channel._id)">
+              <v-icon small color="red lighten-1">mdi-trash-can-outline</v-icon>
+            </v-btn>
+          </v-list-item-action>
+          <!-- </router-link> -->
         </v-list-item>
-     
       </v-list-item-group>
     </v-list>
   </v-layout>
 </template>
 
 <script>
-import { useFind, useGet } from "feathers-vuex";
-import { computed,onMounted,ref, reactive } from "@vue/composition-api";
+import { useFind } from "feathers-vuex";
+import { computed } from "@vue/composition-api";
+import CreateChannel from "../components/CreateChannel.vue";
 
 export default {
+  components: { CreateChannel },
   setup(props, context) {
     const { Channel } = context.root.$FeathersVuex.api;
     const { emit } = context;
@@ -50,14 +55,14 @@ export default {
       return {
         query: {
           $sort: { createdAt: 1 },
-          communityId: context.root.$route.params.id
-        }
+          communityId: context.root.$route.params.id,
+        },
       };
     });
 
     const { items: channels, isPending } = useFind({
       model: Channel,
-      params: channelsParams
+      params: channelsParams,
     });
 
     const getChannel = (channel, index) => {
@@ -65,16 +70,18 @@ export default {
       // localStorage.setItem("channelId", channel._id)
       // state.selectedItem = index
       emit("getChannel", channel);
-
     };
 
+    const deleteChannel = (channelId) => {
+      console.log(channelId);
+    }
 
     return {
       channels,
       getChannel,
       isPending,
-      // state,
+      deleteChannel
     };
-  }
+  },
 };
 </script>
