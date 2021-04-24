@@ -22,8 +22,6 @@
           </v-layout>
         </v-col>
         <v-col class="col-7" style="background: #eee;height: 100%">
-          <!-- <test :singleChannel="singleChannel"></test> -->
-
           <chat :singleChannel="singleChannel"></chat>
         </v-col>
         <v-col class="col-2" style="background: #000;height: 100vh">
@@ -34,7 +32,7 @@
       </v-row>
     </v-container>
     <v-overlay opacity="0.7" :dark="false" color="#000" :value="(commList && commList.ownerId) === currentUser ? state.overlay = false : state.overlay">
-      <v-layout>
+      <v-layout >
         <v-card class="mx-auto" width="500" height="420" color="white">
           <v-card-actions class="d-flex justify-end ma-0 pa-0">
             <v-btn x-small text color="primary" @click="state.overlay = false">
@@ -122,7 +120,7 @@ export default {
     const fetchCommunity =  async () => {
         // const c = await getCommunity(id)
         // communityList.value = c.item
-        // singleChannel.value = null
+        singleChannel.value = null
         state.overlay = true
     }
 
@@ -135,18 +133,7 @@ export default {
       communityList.value = getCommunity(communityId()).item.value;
       return communityList.value;
     });
-
   
-
-    // console.log(state.channel);
-    // onBeforeMount(async () => {
-    //     const c = await getCommunity(communityId())
-    //     console.log(c.item.value);
-    // })
-
-    // onMounted(() => {
-    //   state.overlay = true
-    // })
 
     return {
       setChannel,

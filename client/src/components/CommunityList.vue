@@ -61,6 +61,7 @@ export default {
     const { Community } = context.root.$FeathersVuex.api;
     const { $store } = context.root;
     const currentUser = $store.state.auth.user._id;
+    
     const communitiesParams = computed(() => {
       return {
         query: {
