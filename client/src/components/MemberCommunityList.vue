@@ -5,14 +5,17 @@
       indeterminate
       color="teal"
     ></v-progress-linear>
-    <v-subheader dark>Own</v-subheader>
+    <v-subheader dark>Community</v-subheader>
     <v-layout align-center column class="scroll">
-      <v-list nav class="title d-flex flex-column justify-center align-center">
-        <v-list-item
-          class="my-1"
-          v-for="community in communities"
-          :key="community._id"
-        >
+      <v-list
+        v-for="community in communities"
+        :key="community._id"
+        nav
+        class="title d-flex flex-column justify-center align-center"
+        :class="{hide: communityUser(community, currentUser)}"
+        style="padding: 0px"
+      >
+        <v-list-item class="my-1" v-if="communityUser(community, currentUser)"  :class="{ok: communityUser(community, currentUser)}">
           <v-tooltip right color="black">
             <template v-slot:activator="{ on, attrs }">
               <router-link
@@ -30,7 +33,6 @@
                       isActive && 'router-link-active',
                       isExactActive && 'router-link-exact-active',
                     ]"
-                  
                   >
                     <img
                       v-if="community.icon"
@@ -57,49 +59,62 @@ import { useFind } from "feathers-vuex";
 import { computed, ref } from "@vue/composition-api";
 import textavatar from "@/utils/textavatar";
 export default {
-  props: {welcome: {type: Boolean}},
+  props: { welcome: { type: Boolean } },
   setup(props, context) {
-    const { Community } = context.root.$FeathersVuex.api;
+    const { Member, Community } = context.root.$FeathersVuex.api;
     const { $store } = context.root;
     const currentUser = $store.state.auth.user._id;
-    const communitiesParams = computed(() => {
+
+    // const membersParams = computed(() => {
+    //   return {
+    //     query: {
+    //       $sort: { createdAt: 1 },
+    //     },
+    //   };
+    // });
+    // const { items: members, isPending } = useFind({
+    //   model: Member,
+    //   params: membersParams,
+    // });
+
+    const communityParams = computed(() => {
       return {
         query: {
           $sort: { createdAt: 1 },
-          ownerId: currentUser
         },
       };
     });
     const { items: communities, isPending } = useFind({
       model: Community,
-      params: communitiesParams,
+      params: communityParams,
     });
 
     const toTextAvatar = (text) => {
       return textavatar(text);
     };
 
-    // const resetCommunityChannel = () => {
-    //     localStorage.removeItem("channelId")
-    //     localStorage.removeItem("communityId")
-    //     localStorage.removeItem("selectedItem")
-    // }
+    const communityUser = (community, user) => {
+      if (community.members) {
+        const mem = computed(() => {
+          const found = community.members.some((member) => member._id === user);
+          return found;
+        });
+        // if (mem.value) {
+        //   console.log(community);
+        // }
+        console.log(mem.value);
+        return mem.value
+      }
+    };
 
-    // const welcome = computed(() => {
-    //   return props.welcome = true
-    // })
 
-    // watchEffect(() => {
-    //   if(context.root.$route.params.id) {
-    //     welcome
-    //   }
-    // })
 
     return {
       communities,
       toTextAvatar,
       isPending,
-  
+      currentUser,
+      communityUser,
 
       // resetCommunityChannel
     };
@@ -108,6 +123,9 @@ export default {
 </script>
 
 <style scoped lang="scss">
+.hide {
+  padding: 0px !important;
+}
 .router-link-active {
   background-color: rgb(0, 185, 0);
   color: #fff;

@@ -15,6 +15,7 @@ module.exports = function (app) {
         type: Schema.Types.ObjectId,
         ref: "users",
       },
+      members: [{ _id: { type: Schema.Types.ObjectId, ref: "users" }, admin: { type: Boolean, default: false } }]
     },
     {
       timestamps: true,

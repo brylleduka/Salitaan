@@ -3,23 +3,23 @@ import feathersClient, {
   BaseModel
 } from "../../feathers-client";
 
-class Community extends BaseModel {
+class Member extends BaseModel {
   constructor(data, options) {
     super(data, options);
   }
   // Required for $FeathersVuex plugin to work after production transpile.
-  static modelName = "Community";
+  static modelName = "Member";
   // Define default properties here
   static instanceDefaults() {
     return {
-      name: "",
-      icon: ""
+      communityId: "",
+      users: []
     };
   }
 }
-const servicePath = "communities";
+const servicePath = "members";
 const servicePlugin = makeServicePlugin({
-  Model: Community,
+  Model: Member,
   service: feathersClient.service(servicePath),
   servicePath
 });

@@ -1,17 +1,19 @@
 <template>
-     <v-layout fill-height>
+  <v-layout fill-height>
     <v-navigation-drawer class="nav__drawer" permanent width="100%">
       <v-list-item>
         <v-list-item-content>
           <v-list-item-title class="title d-flex justify-center align-center">
-           <h4 class="subtitle-1 white--text">B</h4>
+            <router-link to="/">
+           <h4 class="subtitle-1 white--text">Salitaan</h4>
+           </router-link>
           </v-list-item-title>
         </v-list-item-content>
       </v-list-item>
 
       <v-divider></v-divider>
       <v-layout class="d-flex flex-column justify-center align-center my-1">
-        <CommunityList/>
+        <CommunityList />
 
         <v-avatar
           class="server__avatar server__add"
@@ -19,12 +21,13 @@
           @click="state.overlay = !state.overlay"
           ><v-icon medium class="icon">mdi-plus</v-icon></v-avatar
         >
+         <member-community-list></member-community-list>
       </v-layout>
     </v-navigation-drawer>
     <!-- OVERLAY FORM -->
     <div class="server__overlay" :class="{ show: state.overlay }">
       <v-layout>
-        <v-card class="mx-auto" width="500" height="380" color="white">
+        <v-card class="mx-auto" width="500" height="420" color="white">
           <v-card-actions class="d-flex justify-end ma-0 pa-0">
             <v-btn x-small text color="primary" @click="state.overlay = false">
               <v-icon x-small>mdi-close</v-icon>
@@ -59,6 +62,10 @@
                 label="Community Name"
                 required
               ></v-text-field>
+                <v-switch
+                  v-model="community.public"
+                  label="Public Community"
+                ></v-switch>
               <div class="d-flex justify-end">
                 <v-btn type="submit" color="primary">
                   Create
@@ -77,9 +84,11 @@
 <script>
 import { reactive, ref } from '@vue/composition-api'
 import CommunityList from "./CommunityList"
+import MemberCommunityList from './MemberCommunityList.vue'
 export default {
     components: {
-        CommunityList
+        CommunityList,
+        MemberCommunityList
     },
     setup(props, context) {
         const state = reactive({
@@ -87,6 +96,7 @@ export default {
             community: {
                 name: '',
                 icon: '',
+                public: false
             },
         })
         const { Community, Channel } = context.root.$FeathersVuex.api
