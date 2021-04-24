@@ -1,6 +1,5 @@
 const { authenticate } = require("@feathersjs/authentication").hooks;
-const populateCommunity = require("../../hooks/populate-community");
-const populateCommunityUser = require("../../hooks/populate-community-user");
+
 module.exports = {
     before: {
         all: [authenticate("jwt")],
@@ -13,7 +12,7 @@ module.exports = {
     },
 
     after: {
-        all: [populateCommunity(), populateCommunityUser()],
+        all: [],
         find: [],
         get: [],
         create: [],

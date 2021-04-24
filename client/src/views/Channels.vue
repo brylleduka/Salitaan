@@ -14,7 +14,7 @@
       max-width="100%"
       class="ma-0 pa-0"
     >
-      <v-list-item-group light>
+      <v-list-item-group light >
         <v-list-item v-for="(channel, index) in channels" :key="channel._id">
           <!-- <router-link
               :to="{ query: { ch: channel._id } }"
@@ -39,7 +39,7 @@
 
 <script>
 import { useFind } from "feathers-vuex";
-import { computed } from "@vue/composition-api";
+import { computed, reactive } from "@vue/composition-api";
 import CreateChannel from "../components/CreateChannel.vue";
 
 export default {
@@ -47,9 +47,9 @@ export default {
   setup(props, context) {
     const { Channel } = context.root.$FeathersVuex.api;
     const { emit } = context;
-    // const state = reactive({
-    //   selectedItem: localStorage.getItem('selectedItem') ? parseInt(localStorage.getItem('selectedItem')) : 0
-    // })
+    const state = reactive({
+      selectedItem: 0
+    })
 
     const channelsParams = computed(() => {
       return {
@@ -77,6 +77,7 @@ export default {
     }
 
     return {
+      state,
       channels,
       getChannel,
       isPending,

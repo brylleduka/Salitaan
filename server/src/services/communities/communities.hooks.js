@@ -1,5 +1,8 @@
 const { authenticate } = require("@feathersjs/authentication").hooks;
 const { setField } = require("feathers-authentication-hooks");
+const populateCommunityUser = require("../../hooks/populate-community-user")
+const { protect
+} = require('@feathersjs/authentication-local').hooks;
 
 const setOwnerId = setField({
     from: "params.user._id",
@@ -25,7 +28,7 @@ module.exports = {
     after: {
         all: [],
         find: [],
-        get: [],
+        get: [populateCommunityUser()],
         create: [],
         update: [],
         patch: [],

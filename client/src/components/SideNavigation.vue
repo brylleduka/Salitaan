@@ -25,7 +25,7 @@
       </v-layout>
     </v-navigation-drawer>
     <!-- OVERLAY FORM -->
-    <div class="server__overlay" :class="{ show: state.overlay }">
+     <v-overlay opacity="0.6" :dark="false" color="#000" :value="state.overlay">
       <v-layout>
         <v-card class="mx-auto" width="500" height="420" color="white">
           <v-card-actions class="d-flex justify-end ma-0 pa-0">
@@ -75,8 +75,10 @@
           </v-card-subtitle>
         </v-card>
       </v-layout>
-    </div>
+     </v-overlay>
     <!-- END OVERLAY FORM -->
+
+    
   </v-layout>
   
 </template>

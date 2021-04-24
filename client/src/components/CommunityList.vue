@@ -57,7 +57,6 @@ import { useFind } from "feathers-vuex";
 import { computed, ref } from "@vue/composition-api";
 import textavatar from "@/utils/textavatar";
 export default {
-  props: {welcome: {type: Boolean}},
   setup(props, context) {
     const { Community } = context.root.$FeathersVuex.api;
     const { $store } = context.root;

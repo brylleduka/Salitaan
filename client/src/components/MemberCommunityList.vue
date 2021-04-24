@@ -51,12 +51,13 @@
         </v-list-item>
       </v-list>
     </v-layout>
+    
   </v-layout>
 </template>
 
 <script>
 import { useFind } from "feathers-vuex";
-import { computed, ref } from "@vue/composition-api";
+import { computed } from "@vue/composition-api";
 import textavatar from "@/utils/textavatar";
 export default {
   props: { welcome: { type: Boolean } },
@@ -95,15 +96,11 @@ export default {
 
     const communityUser = (community, user) => {
       if (community.members) {
-        const mem = computed(() => {
+        // const mem = computed(() => {
           const found = community.members.some((member) => member._id === user);
           return found;
-        });
-        // if (mem.value) {
-        //   console.log(community);
-        // }
-        console.log(mem.value);
-        return mem.value
+        // });
+        // return mem.value
       }
     };
 

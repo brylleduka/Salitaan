@@ -118,10 +118,6 @@ export default {
 
       if(toBottom) {
         console.log('bottom',scrollTop );
-
-        // if(state.skip !== 0) {
-        //    state.skip-=5
-        // }
       }
      
       
