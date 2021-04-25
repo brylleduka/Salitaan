@@ -18,7 +18,7 @@ module.exports = function (app) {
             members: [
                 {
                     _id: { type: Schema.Types.ObjectId, ref: "users" },
-                    membership: { type: String, default: "inactive" },
+                    membership: { type: Boolean, default: false },
                     admin: { type: Boolean, default: false },
                 },
             ],

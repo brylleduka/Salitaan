@@ -5,32 +5,39 @@ exports.Communities = class Communities extends Service {
         this.app = app;
     }
     async patch(id, data, params) {
-        const { r } = params.query;
+        console.log(params.query);
+        const { deny, add, approve } = params.query;
         const community = await this.app.service("communities").get(id);
         let result = {};
 
-        if (data.members) {
-            if (!community.members) {
-                result = data;
-            } else {
-                if (r) {
-                    const comm = await community.members.filter(
-                        (member) => member._id.toString() !== data.members._id
-                    );
+        if (add) {
+            const existingMember = await community.members.find((member) =>
+                member._id.equals(data.members._id)
+            );
+            if (existingMember) throw new Error("Exist");
+            await community.members.push({
+                _id: mongoose.Types.ObjectId(data.members._id),
+            });
 
-                    result = { ...community, members: comm };
-                } else {
-                    const existingMember = await community.members.find(
-                        (member) => member._id.equals(data.members._id)
-                    );
-                    if (existingMember) throw new Error("Exist");
-                    await community.members.push({
-                        _id: mongoose.Types.ObjectId(data.members._id),
-                    });
+            result = community;
+        } else if (approve) {
+            const member = await community.members.find((member) =>
+                member._id.equals(data.members._id)
+            );
 
-                    result = community;
-                }
-            }
+            result = {
+                ...community,
+                members: {
+                    ...member,
+                    membership: params.query.approve,
+                },
+            };
+        } else if (deny) {
+            const comm = await community.members.filter(
+                (member) => member._id.toString() !== data.members._id
+            );
+
+            result = { ...community, members: comm };
         } else {
             result = { ...data };
         }

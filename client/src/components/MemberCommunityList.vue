@@ -8,14 +8,13 @@
     <v-subheader dark>Community</v-subheader>
     <v-layout align-center column class="scroll">
       <v-list
-        v-for="community in communities"
+        v-for="community in computedCommunities(communities, currentUser)"
         :key="community._id"
         nav
         class="title d-flex flex-column justify-center align-center"
-        :class="{hide: communityUser(community, currentUser)}"
         style="padding: 0px"
       >
-        <v-list-item class="my-1" v-if="communityUser(community, currentUser)"  :class="{ok: communityUser(community, currentUser)}">
+        <v-list-item class="my-1">
           <v-tooltip right color="black">
             <template v-slot:activator="{ on, attrs }">
               <router-link
@@ -51,7 +50,6 @@
         </v-list-item>
       </v-list>
     </v-layout>
-    
   </v-layout>
 </template>
 
@@ -62,7 +60,7 @@ import textavatar from "@/utils/textavatar";
 export default {
   props: { welcome: { type: Boolean } },
   setup(props, context) {
-    const { Member, Community } = context.root.$FeathersVuex.api;
+    const {  Community } = context.root.$FeathersVuex.api;
     const { $store } = context.root;
     const currentUser = $store.state.auth.user._id;
 
@@ -94,24 +92,30 @@ export default {
       return textavatar(text);
     };
 
-    const communityUser = (community, user) => {
-      if (community.members) {
-        // const mem = computed(() => {
-          const found = community.members.some((member) => member._id === user);
-          return found;
-        // });
-        // return mem.value
-      }
+    const computedCommunities = (communities, owner) => {
+      let array = [];
+      const compComm = computed(() => {
+        communities.forEach((community) => {
+          if (community.members && Array.isArray(community.members)) {
+            const found = community.members.some(
+              (member) => member._id === owner,
+            );
+
+            if (found) array.push(community);
+          }
+        });
+        return array;
+      });
+
+      return compComm.value;
     };
-
-
 
     return {
       communities,
       toTextAvatar,
       isPending,
       currentUser,
-      communityUser,
+      computedCommunities,
 
       // resetCommunityChannel
     };

@@ -10,20 +10,34 @@ module.exports = function (options = {}) {
             // that we get a safe version of the user data
             let u;
             if (comm.members) {
-                const userMembers = await Promise.all(comm.members.map(async member => {
-                    const us = await app.service("users").get(member._id)
-                    return us
-
-                }))
+                const userMembers = await Promise.all(
+                    comm.members.map(async (member) => {
+                        const user = await app.service("users").get(member._id);
+                        const {
+                            _id,
+                            firstname,
+                            lastname,
+                            email,
+                            username,
+                        } = user;
+                        return {
+                            _id,
+                            firstname,
+                            lastname,
+                            email,
+                            username,
+                            ...member,
+                        };
+                    })
+                );
 
                 return {
                     ...comm,
-                    userMembers
-                }
+                    userMembers,
+                };
             }
-            return comm
+            return comm;
             // Merge the message content to include the `user` object
-
         };
 
         // console.log(context);
