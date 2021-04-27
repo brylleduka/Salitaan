@@ -1,31 +1,42 @@
 <template>
   <v-layout fill-height>
     <v-container fluid class="pa-0">
-      <v-row no-gutters style="height: 100vh">
-        <v-col class="col-3" style="height: 100%">
+      <v-row no-gutters style="height: 100%">
+        <v-col class="col-2" style="height: 100%">
+          <v-btn elevation="0" x-small class="pa-1" style="position: absolute; left: 0%; top: 50%;">channel <v-icon small>mdi-rss</v-icon></v-btn>
+        <v-navigation-drawer permanent>
+         
           <v-layout
             fill-height
             fluid
             class="pa-0 ma-0 community__container"
             column
           >
+       
+            <v-app-bar dark dense elevation="0"></v-app-bar>
             <v-layout class="d-flex align-center pa-4 community__title">
               <p>{{ commList && commList.name }}</p>
 
               <!-- <h4 v-if="state.community.item">{{ state.community.item.name }}</h4> -->
             </v-layout>
-
+            
             <channels @getChannel="setChannel" />
+
             <v-layout class="d-flex align-center pa-4 profile-container">
               <h4>Profile</h4>
             </v-layout>
           </v-layout>
+        </v-navigation-drawer>
         </v-col>
-        <v-col class="col-7" style="background: #eee; height: 100%">
+        <v-col class="col-8" style="background: #eee; height: 100%">
+          
           <chat :singleChannel="singleChannel"></chat>
         </v-col>
-        <v-col class="col-2">
+        <v-col class="col-2" style="height: 100%">
+          <v-btn  elevation="0" x-small  class="pa-1" style="position: absolute; right: 0; top: 50%;">online <v-icon small>mdi-account-check</v-icon></v-btn>
+           <v-navigation-drawer  permanent>
           <v-layout fill-height column>
+             <v-app-bar  dense elevation="0"></v-app-bar>
             <v-layout column
               ><v-list
                 color="transparent"
@@ -71,6 +82,7 @@
             </v-layout>
             <v-divider></v-divider>
             <v-layout fill-height column>
+              
               <v-list
                 color="transparent"
                 dense
@@ -91,20 +103,22 @@
                     ></v-list-item-title>
                   </v-list-item-content>
                   <v-list-item-action class="d-flex flex-row">
-                    <v-form @submit.prevent="approve(commList, member._id)">
-                      <v-btn icon type="submit">
+                    <v-form v-if="commList && commList.ownerId === currentUser._id">
+                      <v-btn icon type="submit" @click="approve(commList, member._id)">
                         <v-icon small color="green lighten-1">mdi-check</v-icon>
                       </v-btn>
-                    </v-form>
+                   
 
-                    <v-btn icon @click="deny(member._id)">
+                    <v-btn icon @click="deny(commList, member._id)">
                       <v-icon small color="red lighten-1">mdi-close</v-icon>
                     </v-btn>
+                     </v-form>
                   </v-list-item-action>
                 </v-list-item>
               </v-list>
             </v-layout>
           </v-layout>
+           </v-navigation-drawer>
         </v-col>
       </v-row>
     </v-container>
@@ -121,9 +135,9 @@
       <v-layout>
         <v-card class="mx-auto" width="500" height="420" color="white">
           <v-card-actions class="d-flex justify-end ma-0 pa-0">
-            <!-- <v-btn x-small text color="primary" @click="state.overlay = false">
+            <v-btn v-if="checkIfAlreadyReq(commList, currentUser._id) && checkIfAlreadyReq(commList, currentUser._id).membership" x-small text color="primary" @click="state.overlay = false">
               <v-icon x-small>mdi-close</v-icon>
-            </v-btn> -->
+            </v-btn>
           </v-card-actions>
           <v-card-text>
             <v-card-title
@@ -151,6 +165,7 @@
           </v-card-text>
           <v-card-subtitle>
             <v-form
+             v-if="checkIfAlreadyReq(commList, currentUser._id) && checkIfAlreadyReq(commList, currentUser._id).membership === false"
               ref="form"
               lazy-validation
               @submit.prevent="
@@ -180,6 +195,9 @@
                 <v-btn color="secondary" to="/"> Back </v-btn>
               </div>
             </v-form>
+            <div v-else class="d-flex justify-center">
+              <v-btn class="mx-auto primary" @click="state.overlay = false">Enter</v-btn>
+            </div>
           </v-card-subtitle>
         </v-card>
       </v-layout>
@@ -190,13 +208,11 @@
 import { watch, ref, computed, reactive } from "@vue/composition-api";
 import { useGet } from "feathers-vuex";
 import Channels from "./Channels.vue";
-import Test from "../components/Test.vue";
 import Chat from "./Chat.vue";
 
 export default {
   components: {
     Channels,
-    Test,
     Chat,
   },
   setup(props, context) {
@@ -206,7 +222,6 @@ export default {
 
     const singleChannel = ref(null);
     const communityList = ref({});
-    const checkReq = ref(null);
     const state = reactive({
       overlay: false,
     });
@@ -232,9 +247,7 @@ export default {
     };
 
     watch(communityId, fetchCommunity, { immediate: true, deep: true });
-    // watch(singleChannel, () => {
-    //     console.log("channel changed");
-    // },{deep: true })
+   
 
     const commList = computed(() => {
       communityList.value = getCommunity(communityId()).item.value;
@@ -242,12 +255,15 @@ export default {
     });
 
     const reqToJoin = async (id, _id) => {
-      const joinCommunity = new Community({
-        id,
-        members: { _id },
-        query: { add: true },
-      });
-      return await joinCommunity.patch();
+      const data = { members: { _id } };
+      let params = {
+        query: {
+          add: true,
+        },
+      };
+      const result = await $store.dispatch("communities/patch", [id, data, params]);
+    
+      return result
     };
 
     const checkIfAlreadyReq = (commList, authUser) => {
@@ -284,16 +300,22 @@ export default {
         },
       };
       const result = await $store.dispatch("communities/patch", [community && community._id, data, params]);
-      // const approveMember = new Community({
-      //   id: community && community._id, members: { _id },
-      // });
+    
       return result
-      // approveMember;
-      // return await approveMember.patch({data: {params: {query: {approve: true}}}});
+
     };
 
-    const deny = (id) => {
-      console.log(id);
+    const deny = async (community, _id) => {
+       const data = { members: { _id } };
+      let params = {
+        query: {
+          deny: true,
+        },
+      };
+      const result = await $store.dispatch("communities/patch", [community && community._id, data, params]);
+     
+      return result
+      
     };
 
     return {

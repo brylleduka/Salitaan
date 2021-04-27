@@ -1,14 +1,15 @@
 <template>
   <v-layout>
-    <v-form @submit.prevent="onSubmit(cha.communityId, cha._id)" class="chat-box d-flex justify-center">
+    <v-form @submit.prevent="onSubmit(cha.communityId, cha._id)" class="chat-box d-flex justify-center pa-2">
       <v-text-field
-        style="width: 100%"
+        dense
+        style="width: 98%"
         placeholder="Compose Message"
         outlined
         rounded
         v-model="state.text"
       ></v-text-field>
-      <v-btn type="submit" icon large class="mt-2"
+      <v-btn type="submit" icon small class="mt-2"
         ><v-icon medium>mdi-send</v-icon></v-btn
       >
     </v-form>
@@ -94,6 +95,5 @@ export default {
 <style lang="scss" scoped>
 .chat-box {
   width: 100%;
-  margin-top: 2em;
 }
 </style>

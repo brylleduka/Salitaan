@@ -3,25 +3,27 @@
     <v-card
       class="pa-8 d-flex flex-column justify-center align-center"
       width="500"
-      height="400"
+      height="auto"
     >
       <v-main class="pa-4" style="width: 100%" >
-        <LoginForm />
+        <signup-form ></signup-form>
     
       </v-main>
-   <v-btn text to="/signup">Sign up</v-btn>
+   <v-btn text to="/login">Log in</v-btn>
           
     </v-card>
   </v-container>
 </template>
 
 <script>
-import { onMounted, watch } from '@vue/composition-api'
-import LoginForm from '@/components/LoginForm';
+import { watch } from '@vue/composition-api'
+
 import route from "@/router"
+import SignupForm from '../components/SignupForm.vue';
 export default {
   components: {
-    LoginForm,
+
+    SignupForm
   },
   setup(props, context) {
     const { $store, $router } = context.root

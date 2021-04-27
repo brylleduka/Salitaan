@@ -2,7 +2,7 @@
   <v-layout  style="height: 100%; width: 100%; overflow: hidden">
       <v-layout
         ref="chatPane"
-        style="overflow-y: auto; height: 90vh"
+        style="overflow-y: auto;"
         class="message__container pa-2 d-flex justify-start flex-column-reverse"
          id="scroll-target"
       >
@@ -62,7 +62,7 @@ export default {
 
 <style lang="scss" scoped>
 .message__container{
-  height: 90vh;
+  height: 100%;
 
  &::-webkit-scrollbar-track {
     // -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);

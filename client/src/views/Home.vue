@@ -1,12 +1,11 @@
 <template>
   <v-layout fill-height>
+     
     <v-container fluid class="pa-0">
       <v-row no-gutters style="height: 100%">
-        <v-col class="col-1" style="height: 100%">
-          <div style="background: #ccc; height: 100%"></div>
-        </v-col>
-        <v-col class="col-10">
-          <v-layout class="d-flex flex-start flex-wrap py-4 px-2">
+        <v-col class="col-12">
+          <v-layout class="d-flex flex-start flex-wrap py-14 px-2">
+            
             <v-container fluid>
               <v-row dense>
                 <v-col
@@ -46,9 +45,7 @@
             </v-container>
           </v-layout>
         </v-col>
-        <v-col class="col-1">
-          <div style="background: #eee; height: 100%"></div>
-        </v-col>
+     
       </v-row>
     </v-container>
   </v-layout>
