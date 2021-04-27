@@ -1,5 +1,5 @@
 <template>
-  <v-layout align-center column>
+  <v-layout align-center column style="z-index: 20">
     <v-progress-linear
       :active="isPending"
       indeterminate
