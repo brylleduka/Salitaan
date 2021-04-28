@@ -1,15 +1,19 @@
 <template>
   <v-layout>
     <v-form @submit.prevent="onSubmit(cha.communityId, cha._id)" class="chat-box d-flex justify-center pa-2">
-      <v-text-field
-        dense
+      <v-textarea
+        flat
         style="width: 98%"
         placeholder="Compose Message"
         outlined
         rounded
         v-model="state.text"
-      ></v-text-field>
-      <v-btn type="submit" icon small class="mt-2"
+        @keydown.enter.prevent
+        height="50px"
+        no-resize
+        row-height="12"
+      ></v-textarea>
+      <v-btn type="submit"  icon small class="mt-2"
         ><v-icon medium>mdi-send</v-icon></v-btn
       >
     </v-form>
@@ -19,10 +23,6 @@
 import {
   reactive,
   ref,
-  watchEffect,
-  watch,
-  onMounted,
-  on,
   computed,
 } from "@vue/composition-api";
 export default {
@@ -40,29 +40,6 @@ export default {
       ch.value = props.channel;
       return ch.value;
     });
-
-    // watch(
-    //   () => context.root.$route.query.ch,
-    //   () => {
-    //     chid.value = context.root.$route.query.ch;
-    //     commid.value = context.root.$route.params.id;
-    //   },
-    // );
-
-    // const message = ref(
-    // new Message({
-    //   text: state.text,
-    //   communityId: context.root.$route.params.id,
-    //   channelId: context.root.$route.query.ch
-    // })
-    // );
-    // function reset() {
-    //   message.value = new Message({
-    //     text: state.text,
-    //     communityId: context.root.$route.params.id,
-    //     channelId: context.root.$route.query.ch,
-    //   });
-    // }
 
     async function onSubmit(communityId, channelId ) {
       console.log(state.text);

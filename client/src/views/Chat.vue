@@ -1,23 +1,37 @@
 <template>
-  <v-layout
-    column
-    fill-height
-    fluid
-    class="message d-flex justify-between flex-column"
-  >
-    <v-layout style="height: 100%; width: 100%; overflow: hidden">
+  <v-layout column fluid style="height: 100%">
+    <v-layout
+      fill-height
+      class="message d-flex flex-end justify-between flex-column"
+      style="padding-top: 2em"
+    >
       <v-layout
         ref="chatPane"
-        style="overflow-y: scroll;"
         class="message__container pa-3 d-flex justify-start flex-column-reverse"
         id="scroll-target"
+      
       >
+        <!-- <v-virtual-scroll
+          :items="messages"
+          :item-height="50"
+          height="800"
+          :bench="1"
+        >
+          <template>
+            <v-list-item>
+              <v-list-item-content>
+                <v-list-item-title>Item </v-list-item-title>
+              </v-list-item-content>
+            </v-list-item>
+          </template>
+        </v-virtual-scroll> -->
         <Message
-        v-scroll:#scroll-target="onScrollTop"
-          v-for="message in messages"
-          :key="message._id"
-          :message="message"
-        />
+            v-scroll:#scroll-target="onScrollTop"
+            v-for="message in messages"
+            :key="message._id"
+            :message="message"
+          />
+    
       </v-layout>
     </v-layout>
     <div v-if="channel">
@@ -28,25 +42,29 @@
 
 <script>
 import { useFind } from "feathers-vuex";
-import { computed, onMounted, reactive, ref, watch } from "@vue/composition-api";
+import {
+  computed,
+  onMounted,
+  reactive,
+  ref,
+  watch,
+} from "@vue/composition-api";
 
 import Message from "@/components/Message";
 import ComposeMessage from "../components/ComposeMessage.vue";
 export default {
   components: {
     Message,
-    ComposeMessage
+    ComposeMessage,
   },
   props: {
     singleChannel: {
-      type: Object
-    }
+      type: Object,
+    },
   },
   setup(props, context) {
     const { Message } = context.root.$FeathersVuex.api;
     const ch = ref(null);
-    // const chid = ref("");
-    // const commid = ref("");
     const chatPane = ref(null);
     const channel = computed(() => {
       ch.value = props.singleChannel;
@@ -54,9 +72,8 @@ export default {
     });
 
     const state = reactive({
-      skip: 0
-    })
-
+      skip: 0,
+    });
 
     // watch(channel, () => {
     //   chid.value = context.root.$route.query.ch;
@@ -72,17 +89,15 @@ export default {
           $sort: { createdAt: -1 },
           $limit: 10,
           $skip: skip,
-          $limit: 50
+          $limit: 50,
         },
-       
       };
-    }
+    };
     const messagesParams = computed(() => params(state.skip));
-
 
     const { items: messages } = useFind({
       model: Message,
-      params: messagesParams
+      params: messagesParams,
     });
 
     function scrollToBottom() {
@@ -93,47 +108,47 @@ export default {
     onMounted(() => {
       watch(
         () => messages.length,
-        () => scrollToBottom()
+        () => scrollToBottom(),
       );
     });
 
-  
-
     const onScrollTop = (e) => {
-        let scrollHeight = e.target.scrollHeight
-        let clientHeight = e.target.clientHeight
-        let scrollTop = e.target.scrollTop
-      const scrolled = scrollHeight - (clientHeight - scrollTop)
-      const toTop = scrolled <= 1 ? true : false
-      const bottom = scrollTop >= 1 && 0 
-      const toBottom = bottom === 0 ? true : false
+      let scrollHeight = e.target.scrollHeight;
+      let clientHeight = e.target.clientHeight;
+      let scrollTop = e.target.scrollTop;
+      const scrolled = scrollHeight - (clientHeight - scrollTop);
+      const toTop = scrolled <= 1 ? true : false;
+      const bottom = scrollTop >= 1 && 0;
+      const toBottom = bottom === 0 ? true : false;
       //  console.log("SCROLLED", scrolled);
       // console.log('SCROLL TOP',scrollTop);
       // console.log(scrolled > -scrollTop ? true : false);
-      if(toTop) {
-       console.log('top');
+      if (toTop) {
+        console.log("top");
         //  clientHeight = 700
-          // state.skip+=5
+        // state.skip+=5
       }
 
-      if(toBottom) {
-        console.log('bottom',scrollTop );
+      if (toBottom) {
+        console.log("bottom", scrollTop);
       }
-     
-      
-    }
+
+    
+    };
     return {
       messages,
       channel,
-      onScrollTop
+      onScrollTop,
     };
-  }
+  },
 };
 </script>
 
 <style lang="scss" scoped>
 .message__container {
-  height: 90vh;
+  height: 80vh;
+  overflow-y: scroll;
+  margin-top: 2em;
 
   &::-webkit-scrollbar-track {
     // -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);

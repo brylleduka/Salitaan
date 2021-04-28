@@ -42,6 +42,7 @@ export default {
   margin: 0 0.5em ;
   margin-bottom: 1.2em;
 
+
   .message-wrapper {
     height: auto;
   }

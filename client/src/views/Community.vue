@@ -8,11 +8,11 @@
             x-small
             class="pa-1"
             style="position: absolute; left: 0%; top: 50%"
-             @click.stop="state.channelDrawer = !state.channelDrawer"
+            @click.stop="state.channelDrawer = !state.channelDrawer"
             >channel <v-icon small>mdi-rss</v-icon></v-btn
           >
           <v-navigation-drawer
-           v-model="state.channelDrawer"
+            v-model="state.channelDrawer"
             :width="$vuetify.breakpoint.mobile ? '256' : '100%'"
             :permanent="
               $vuetify.breakpoint.lg || $vuetify.breakpoint.xl ? true : false
@@ -53,7 +53,7 @@
             >members <v-icon small>mdi-account-check</v-icon></v-btn
           >
           <v-navigation-drawer
-           v-model="state.memberDrawer"
+            v-model="state.memberDrawer"
             right
             :width="$vuetify.breakpoint.mobile ? '256' : '100%'"
             :permanent="
@@ -205,12 +205,20 @@
             </v-card-subtitle>
           </v-card-text>
           <v-card-subtitle>
-            <v-form
+           
+            <div
               v-if="
                 checkIfAlreadyReq(commList, currentUser._id) &&
-                checkIfAlreadyReq(commList, currentUser._id).membership ===
-                  false
+                checkIfAlreadyReq(commList, currentUser._id).membership
               "
+              class="d-flex justify-center"
+            >
+              <v-btn class="mx-auto primary" @click="state.overlay = false"
+                >Enter</v-btn
+              >
+            </div>
+            <v-form
+              v-else
               ref="form"
               lazy-validation
               @submit.prevent="
@@ -240,11 +248,6 @@
                 <v-btn color="secondary" to="/"> Back </v-btn>
               </div>
             </v-form>
-            <div v-else class="d-flex justify-center">
-              <v-btn class="mx-auto primary" @click="state.overlay = false"
-                >Enter</v-btn
-              >
-            </div>
           </v-card-subtitle>
         </v-card>
       </v-layout>
@@ -273,7 +276,7 @@ export default {
     const state = reactive({
       overlay: false,
       channelDrawer: false,
-      memberDrawer: false
+      memberDrawer: false,
     });
 
     const setChannel = (channel) => {
@@ -324,7 +327,8 @@ export default {
         if (commList && Array.isArray(commList.members)) {
           const member = commList.members.find((m) => m._id === authUser);
 
-          return member;
+          if (member) return member;
+          return false;
         }
       });
 
