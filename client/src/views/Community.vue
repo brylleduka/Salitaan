@@ -1,8 +1,8 @@
 <template>
   <v-layout fill-height>
-    <v-container fluid class="pa-0">
-      <v-row no-gutters style="height: 100%">
-        <v-col class="col-2" style="height: 100%">
+    <v-container fluid class="pa-0" >
+      <v-row no-gutters  style="height: 100%">
+        <v-col class="col-2">
           <v-btn
             elevation="0"
             x-small
@@ -164,8 +164,8 @@
           : state.overlay
       "
     >
-      <v-layout>
-        <v-card class="mx-auto" width="500" height="420" color="white">
+      <v-layout class="pa-4">
+        <v-card class="mx-auto" :width="$vuetify.breakpoint.mobile ? 'auto' :500" height="auto" color="white">
           <v-card-actions class="d-flex justify-end ma-0 pa-0">
             <v-btn
               v-if="

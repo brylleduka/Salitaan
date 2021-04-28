@@ -1,13 +1,11 @@
 <template>
   <v-layout fill-height column style="z-index: 10">
     <v-app-bar dense elevation="0" dark style="position: absolute; z-index: 10">
-     
       <v-app-bar-nav-icon
         dark
         @click.stop="state.drawer = !state.drawer"
-      
       ></v-app-bar-nav-icon>
-        <v-list-item>
+      <v-list-item>
         <v-list-item-content>
           <v-list-item-title class="title d-flex justify-center align-center">
             <router-link to="/">
@@ -19,19 +17,17 @@
     </v-app-bar>
 
     <v-navigation-drawer
-      class="nav__drawer d-flex flex-column"
+      class="nav__drawer d-flex flex-column py-12"
       v-model="state.drawer"
-       :permanent="
+      :permanent="
         $vuetify.breakpoint.lg || $vuetify.breakpoint.xl ? true : false
       "
-      :absolute="
-        $vuetify.breakpoint.mobile ? true : false
-      "
+      :absolute="$vuetify.breakpoint.mobile ? true : false"
     >
       <v-spacer></v-spacer>
 
       <v-divider></v-divider>
-      <v-layout class="d-flex flex-column justify-center align-center my-12">
+      <v-layout class="d-flex flex-column justify-center align-center">
         <CommunityList />
 
         <v-avatar
@@ -41,15 +37,21 @@
           ><v-icon medium class="icon">mdi-plus</v-icon></v-avatar
         >
         <member-community-list></member-community-list>
-      </v-layout>
-        <v-form @submit.prevent="logout" class="d-flex justify-center align-center" style="position: absolute; bottom: 0; width: 100%">
-          <v-btn small type="submit" class="justify-end align-center">Sign Out</v-btn>
+        <v-form
+          @submit.prevent="logout"
+          class="d-flex justify-center align-center"
+          style="position: absolute; bottom: 0; width: 100%"
+        >
+          <v-btn small type="submit" class="justify-end align-center"
+            >Sign Out</v-btn
+          >
         </v-form>
+      </v-layout>
     </v-navigation-drawer>
     <!-- OVERLAY FORM -->
     <v-overlay opacity="0.6" :dark="false" color="#000" :value="state.overlay">
-      <v-layout>
-        <v-card class="mx-auto" width="500" height="420" color="white">
+      <v-layout class="pa-6">
+        <v-card class="mx-auto" :width="$vuetify.breakpoint.mobile ? 'auto' :500" height="auto" color="white">
           <v-card-actions class="d-flex justify-end ma-0 pa-0">
             <v-btn x-small text color="primary" @click="state.overlay = false">
               <v-icon x-small>mdi-close</v-icon>
@@ -107,7 +109,7 @@ import MemberCommunityList from "./MemberCommunityList.vue";
 export default {
   components: {
     CommunityList,
-    MemberCommunityList,
+    MemberCommunityList
   },
   props: ["drawer"],
   setup(props, context) {
@@ -117,8 +119,8 @@ export default {
       community: {
         name: "",
         icon: "",
-        public: false,
-      },
+        public: false
+      }
     });
     const { Community, Channel } = context.root.$FeathersVuex.api;
     const { $store, $router } = context.root;
@@ -136,7 +138,7 @@ export default {
 
       const channel = new Channel({
         name: "general",
-        communityId: commResult._id,
+        communityId: commResult._id
       });
       await channel.save();
       reset();
@@ -153,10 +155,9 @@ export default {
       state,
       community,
       createCommunity,
-      logout,
+      logout
     };
-  },
+  }
 };
 </script>
-<style lang="scss">
-</style>
+<style lang="scss"></style>

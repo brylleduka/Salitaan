@@ -1,13 +1,14 @@
 import feathers from '@feathersjs/feathers'
-// import socketio from '@feathersjs/socketio-client'
+
 import primusClient from '@feathersjs/primus-client'
 import auth from '@feathersjs/authentication-client'
-// import io from 'socket.io-client'
+
 import Primus from 'primus-client'
 import { iff, discard } from 'feathers-hooks-common'
 import feathersVuex from 'feathers-vuex'
 
-const socket = new Primus('http://localhost:3035', { transports: ['websocket'] })
+const socket = new Primus('https://salitaan.herokuapp.com', { transports: ['websocket'] })
+// const socket = new Primus('http://localhost:3035', { transports: ['websocket'] })
 
 const feathersClient = feathers()
     .configure(primusClient(socket))

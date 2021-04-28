@@ -9,8 +9,6 @@
               v-if="auth.user"
               
             ></side-navigation>
-        
-
           <v-col :class="$vuetify.breakpoint.mobile ? 'col-12' : 'col-11'">
             <router-view />
           </v-col>
@@ -63,6 +61,7 @@ export default {
 
 <style lang="scss">
 body {
+  overflow: hidden;
   &::-webkit-scrollbar-track {
     // -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
     // box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);

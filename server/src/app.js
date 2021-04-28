@@ -10,7 +10,6 @@ const configuration = require('@feathersjs/configuration');
 const express = require('@feathersjs/express');
 
 const primus = require('@feathersjs/primus');
-const path = require('path');
 const serveStatic = require('serve-static');
 
 const middleware = require('./middleware');
@@ -36,8 +35,12 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(favicon(path.join(app.get('public'), 'favicon.ico')));
 // Host the public folder
-// app.use('/', express.static(app.get('public')));
-app.use(serveStatic(__dirname + "/dist"));
+app.use('/', express.static(app.get('public')));
+// app.use(serveStatic(__dirname + "/dist"));
+// this * route is to serve project on different page routes except root `/`
+// app.get(/.*/, function (req, res) {
+//   res.sendFile(path.join(__dirname, '/dist/index.html'))
+// })
 // Set up Plugins and providers
 app.configure(express.rest());
 
