@@ -7,8 +7,8 @@ import Primus from 'primus-client'
 import { iff, discard } from 'feathers-hooks-common'
 import feathersVuex from 'feathers-vuex'
 
-const socket = new Primus('https://salitaan.herokuapp.com', { transports: ['websocket'] })
-// const socket = new Primus('http://localhost:3035', { transports: ['websocket'] })
+// const socket = new Primus('https://salitaan.herokuapp.com', { transports: ['websocket'] })
+const socket = new Primus('http://localhost:3035', { transports: ['websocket'] })
 
 const feathersClient = feathers()
     .configure(primusClient(socket))
